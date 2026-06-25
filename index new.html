@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍔 Sherdor Fast Food</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            padding: 35px 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(249, 115, 22, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .header-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+        
+        .header-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        
+        /* CONTENT */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(180deg, #f5f3ff 0%, #faf8ff 100%);
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .categories::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .categories::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+        
+        .category-btn {
+            flex: 0 0 auto;
+            padding: 11px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .category-btn:hover {
+            border-color: #f97316;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.15);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            border: 2px solid transparent;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(249, 115, 22, 0.15);
+            border-color: #f97316;
+        }
+        
+        .menu-emoji {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .menu-card:hover .menu-emoji {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .menu-name {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        
+        .menu-price {
+            color: #f97316;
+            font-weight: 800;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+        
+        .add-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+        }
+        
+        .add-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* CART */
+        .cart-view {
+            display: none;
+        }
+        
+        .cart-view.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            background: white;
+            padding: 14px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #f97316;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            animation: slideInRight 0.3s ease;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 15px;
+        }
+        
+        .cart-item-price {
+            color: #f97316;
+            font-size: 14px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: #fef3c7;
+            border: 2px solid #f97316;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .qty-btn:hover {
+            background: #fed7aa;
+            transform: scale(1.1);
+        }
+        
+        .qty-text {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: transform 0.2s;
+        }
+        
+        .remove-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+        
+        .empty-cart-emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .cart-total {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 18px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
+        }
+        
+        .cart-total-label {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .cart-total-price {
+            font-size: 26px;
+            font-weight: 800;
+        }
+        
+        .confirm-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .back-btn {
+            width: 100%;
+            background: #e5e7eb;
+            color: #374151;
+            border: none;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #d1d5db;
+            transform: translateY(-2px);
+        }
+        
+        /* ADMIN */
+        .admin-view {
+            display: none;
+        }
+        
+        .admin-view.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            padding: 20px 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-login {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-login.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .admin-login-box {
+            background: white;
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .admin-login-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .admin-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        
+        .admin-input:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+        
+        .admin-login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+        }
+        
+        .admin-logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: 18px;
+            padding: 18px;
+            margin: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .admin-card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 14px;
+        }
+        
+        .admin-input-field {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            background: #f9fafb;
+            transition: all 0.3s;
+        }
+        
+        .admin-input-field:focus {
+            outline: none;
+            border-color: #f97316;
+            background: white;
+        }
+        
+        .category-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .cat-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .cat-btn.active {
+            background: #f97316;
+            border-color: #f97316;
+            color: white;
+        }
+        
+        .add-item-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-item-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.2);
+        }
+        
+        .menu-item-admin {
+            background: #fef3c7;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #f97316;
+            animation: fadeInUp 0.3s ease;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 15px;
+        }
+        
+        .item-price {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        @media (max-width: 600px) {
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 12px;
+            }
+            
+            .header-title {
+                font-size: 22px;
+            }
+            
+            .admin-login-box {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-title">🍔 Sherdor Fast Food</div>
+            <div class="header-buttons">
+                <button class="header-btn" id="settingsBtn" title="Admin">⚙️</button>
+                <button class="header-btn" id="cartBtn" title="Cart">
+                    🛒
+                    <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- ADMIN LOGIN -->
+        <div class="admin-login" id="adminLogin">
+            <div class="admin-login-box">
+                <div class="admin-login-title">🔐</div>
+                <input type="password" class="admin-input" id="adminPassword" placeholder="Parol kiriting">
+                <button class="admin-login-btn" id="adminLoginBtn">Kirish</button>
+                <button class="admin-login-btn" style="background: #e5e7eb; color: #374151;" id="adminCancelBtn">Orqaga</button>
+            </div>
+        </div>
+        
+        <!-- MENU VIEW -->
+        <div class="content" id="menuView">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Taom qidirish...">
+            </div>
+            
+            <div class="categories">
+                <button class="category-btn active" data-category="taom">🍖 Taomlar</button>
+                <button class="category-btn" data-category="ichimlik">🥤 Ichimliklar</button>
+            </div>
+            
+            <div class="menu-grid" id="menuGrid"></div>
+        </div>
+        
+        <!-- CART VIEW -->
+        <div class="content cart-view" id="cartView">
+            <div class="cart-title">🛒 Savat</div>
+            <div id="cartItems"></div>
+            <button class="back-btn" id="cartBackBtn">← Orqaga</button>
+        </div>
+        
+        <!-- ADMIN VIEW -->
+        <div class="content admin-view" id="adminView">
+            <div class="admin-header">
+                <div style="font-size: 24px; font-weight: bold;">🍔 Menyu Boshqarish</div>
+                <button class="admin-logout-btn" id="adminLogoutBtn">Chiqish →</button>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-title">➕ Yangi Taom</div>
+                <input type="text" class="admin-input-field" id="itemName" placeholder="Taom nomi">
+                <input type="number" class="admin-input-field" id="itemPrice" placeholder="Narx (so'm)">
+                <div class="category-select">
+                    <button class="cat-btn active" data-cat="taom">🍖 Taom</button>
+                    <button class="cat-btn" data-cat="ichimlik">🥤 Ichimlik</button>
+                </div>
+                <button class="add-item-btn" id="addItemBtn">✅ Qo'shish</button>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-title">📋 Barcha Taomlar</div>
+                <div id="adminMenuList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DATA
+        let menuItems = [
+            { id: 1, name: 'Lavash', price: 15000, category: 'taom', emoji: '🌯' },
+            { id: 2, name: 'Tandir lavash', price: 18000, category: 'taom', emoji: '🔥' },
+            { id: 3, name: 'Hot dog', price: 20000, category: 'taom', emoji: '🌭' },
+            { id: 4, name: 'Osh', price: 25000, category: 'taom', emoji: '🍚' },
+            { id: 5, name: 'Suv', price: 3000, category: 'ichimlik', emoji: '💧' },
+            { id: 6, name: 'Koffe', price: 8000, category: 'ichimlik', emoji: '☕' },
+            { id: 7, name: 'Choy', price: 5000, category: 'ichimlik', emoji: '🫖' }
+        ];
+        
+        let cart = [];
+        let isAdmin = false;
+        let activeCategory = 'taom';
+        let selectedCategory = 'taom';
+        let searchQuery = '';
+        
+        // DOM ELEMENTS
+        const menuView = document.getElementById('menuView');
+        const cartView = document.getElementById('cartView');
+        const adminView = document.getElementById('adminView');
+        const adminLogin = document.getElementById('adminLogin');
+        const menuGrid = document.getElementById('menuGrid');
+        const cartBtn = document.getElementById('cartBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const cartBadge = document.getElementById('cartBadge');
+        const searchInput = document.getElementById('searchInput');
+        const cartBackBtn = document.getElementById('cartBackBtn');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassword = document.getElementById('adminPassword');
+        const adminCancelBtn = document.getElementById('adminCancelBtn');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const itemName = document.getElementById('itemName');
+        const itemPrice = document.getElementById('itemPrice');
+        
+        // EVENTS
+        cartBtn.addEventListener('click', showCart);
+        settingsBtn.addEventListener('click', showAdminLogin);
+        cartBackBtn.addEventListener('click', showMenu);
+        adminLoginBtn.addEventListener('click', checkAdminPassword);
+        adminCancelBtn.addEventListener('click', hideAdminLogin);
+        adminLogoutBtn.addEventListener('click', logoutAdmin);
+        addItemBtn.addEventListener('click', addNewItem);
+        searchInput.addEventListener('input', updateMenu);
+        
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                activeCategory = e.target.dataset.category;
+                updateMenu();
+            });
+        });
+        
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                selectedCategory = e.target.dataset.cat;
+            });
+        });
+        
+        adminPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAdminPassword();
+        });
+        
+        // FUNCTIONS
+        function updateMenu() {
+            searchQuery = searchInput.value.toLowerCase();
+            const filtered = menuItems.filter(item => 
+                item.category === activeCategory && 
+                item.name.toLowerCase().includes(searchQuery)
+            );
+            
+            menuGrid.innerHTML = filtered.map(item => `
+                <div class="menu-card">
+                    <div class="menu-emoji">${item.emoji}</div>
+                    <div class="menu-name">${item.name}</div>
+                    <div class="menu-price">${item.price.toLocaleString('en-US')} so'm</div>
+                    <button class="add-btn" onclick="addToCart(${item.id})">Savatga</button>
+                </div>
+            `).join('');
+        }
+        
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            const existing = cart.find(c => c.id === itemId);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCartBadge();
+        }
+        
+        function updateCartBadge() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (count > 0) {
+                cartBadge.textContent = count;
+                cartBadge.style.display = 'flex';
+            } else {
+                cartBadge.style.display = 'none';
+            }
+        }
+        
+        function showCart() {
+            menuView.style.display = 'none';
+            adminView.classList.remove('active');
+            cartView.classList.add('active');
+            updateCartDisplay();
+        }
+        
+        function showMenu() {
+            cartView.classList.remove('active');
+            menuView.style.display = 'block';
+            updateMenu();
+        }
+        
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart"><div class="empty-cart-emoji">📭</div><div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Savat bo\'sh</div><div>Taom tanlang!</div></div>';
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartItems.innerHTML = `
+                ${cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.emoji} ${item.name}</div>
+                            <div class="cart-item-price">${item.price.toLocaleString('en-US')} so'm</div>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="changeQuantity(${item.id}, ${item.quantity - 1})">−</button>
+                            <div class="qty-text">${item.quantity}</div>
+                            <button class="qty-btn" onclick="changeQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('')}
+                <div class="cart-total">
+                    <div class="cart-total-label">Jami:</div>
+                    <div class="cart-total-price">${total.toLocaleString('en-US')} so'm</div>
+                </div>
+                <button class="confirm-btn" onclick="alert('✅ Buyurtma tasdiqlandi!')">✅ Buyurtmani Tasdiqlash</button>
+            `;
+        }
+        
+        function changeQuantity(itemId, newQty) {
+            if (newQty <= 0) {
+                removeFromCart(itemId);
+            } else {
+                const item = cart.find(c => c.id === itemId);
+                if (item) item.quantity = newQty;
+                updateCartBadge();
+                updateCartDisplay();
+            }
+        }
+        
+        function removeFromCart(itemId) {
+            cart = cart.filter(c => c.id !== itemId);
+            updateCartBadge();
+            updateCartDisplay();
+        }
+        
+        function showAdminLogin() {
+            adminLogin.classList.add('active');
+        }
+        
+        function hideAdminLogin() {
+            adminLogin.classList.remove('active');
+            adminPassword.value = '';
+        }
+        
+        function checkAdminPassword() {
+            if (adminPassword.value === 'admin123') {
+                isAdmin = true;
+                hideAdminLogin();
+                showAdmin();
+            } else {
+                alert('Parol noto\'g\'ri!');
+                adminPassword.value = '';
+            }
+        }
+        
+        function showAdmin() {
+            menuView.style.display = 'none';
+            cartView.classList.remove('active');
+            adminView.classList.add('active');
+            updateAdminMenu();
+        }
+        
+        function logoutAdmin() {
+            isAdmin = false;
+            adminView.classList.remove('active');
+            menuView.style.display = 'block';
+            updateMenu();
+        }
+        
+        function addNewItem() {
+            const name = itemName.value.trim();
+            const price = parseInt(itemPrice.value);
+            
+            if (!name || !price) {
+                alert('Nomi va narxini kiriting!');
+                return;
+            }
+            
+            const newItem = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                category: selectedCategory,
+                emoji: selectedCategory === 'taom' ? '🍖' : '🥤'
+            };
+            
+            menuItems.push(newItem);
+            itemName.value = '';
+            itemPrice.value = '';
+            updateAdminMenu();
+            alert('✅ Taom qo\'shildi!');
+        }
+        
+        function updateAdminMenu() {
+            const adminMenuList = document.getElementById('adminMenuList');
+            adminMenuList.innerHTML = menuItems.map(item => `
+                <div class="menu-item-admin">
+                    <div class="item-info">
+                        <div class="item-name">${item.emoji} ${item.name}</div>
+                        <div class="item-price">${item.category} • ${item.price.toLocaleString('en-US')} so'm</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})">🗑️</button>
+                </div>
+            `).join('');
+        }
+        
+        function deleteItem(itemId) {
+            if (confirm('Bu taomni o\'chirmiz?')) {
+                menuItems = menuItems.filter(i => i.id !== itemId);
+                updateAdminMenu();
+            }
+        }
+        
+        // INIT
+        updateMenu();
+    </script>
+</body>
+</html>
