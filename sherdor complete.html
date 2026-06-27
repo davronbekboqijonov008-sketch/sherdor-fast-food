@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍔 Sherdor Burger</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+        }
+        
+        :root {
+            --primary: #f97316;
+            --primary-dark: #ea580c;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #ffffff;
+            --gray: #9ca3af;
+            --gold: #fbbf24;
+        }
+        
+        /* SPLASH SCREEN */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: splashFadeOut 0.5s ease forwards 2.5s;
+        }
+        
+        @keyframes splashFadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        
+        .splash-content {
+            text-align: center;
+        }
+        
+        .splash-text {
+            font-size: 48px;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .splash-smile {
+            font-size: 80px;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* HEADER */
+        .header {
+            background: var(--card-bg);
+            padding: 16px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        
+        .settings-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--card-bg);
+            color: var(--text);
+            z-index: 200;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+        
+        .sidebar-brand {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-location {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-item {
+            padding: 16px 20px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(249, 115, 22, 0.1);
+            border-left-color: var(--primary);
+        }
+        
+        .sidebar-item.active {
+            background: rgba(249, 115, 22, 0.15);
+            border-left-color: var(--primary);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* CONTENT */
+        .content {
+            margin-bottom: 80px;
+            padding: 0;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* AUTH PAGE */
+        .auth-container {
+            max-width: 360px;
+            margin: 60px auto;
+            background: var(--card-bg);
+            padding: 40px 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .auth-subtitle {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        
+        .phone-input, .code-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background: var(--dark-bg);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        
+        .phone-input:focus, .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+        }
+        
+        .auth-method-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: var(--dark-bg);
+            color: var(--text);
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .auth-method-btn:hover {
+            border-color: var(--primary);
+            background: rgba(249, 115, 22, 0.1);
+        }
+        
+        .auth-method-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-color: var(--primary);
+        }
+        
+        /* HOME PAGE */
+        .home-container {
+            padding: 15px;
+        }
+        
+        .delivery-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* LOCATION SECTION */
+        .location-section {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .location-section.active {
+            display: block;
+        }
+        
+        .location-label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .location-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            background: var(--dark-bg);
+            color: var(--text);
+        }
+        
+        .location-picker {
+            width: 100%;
+            height: 160px;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: rgba(249, 115, 22, 0.08);
+            font-size: 13px;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+        
+        .location-picker:hover {
+            border-color: var(--primary);
+        }
+        
+        /* PICKUP INFO */
+        .pickup-info {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            display: none;
+            border-left: 5px solid #10b981;
+        }
+        
+        .pickup-info.active {
+            display: block;
+        }
+        
+        .pickup-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-size: 15px;
+        }
+        
+        .pickup-detail {
+            font-size: 13px;
+            color: #86efac;
+            margin: 5px 0;
+        }
+        
+        /* CATEGORIES */
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            padding: 12px 15px;
+            background: var(--card-bg);
+            margin: 0 -15px 18px -15px;
+            border: 1px solid var(--border);
+        }
+        
+        .category-btn {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            border-radius: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .category-btn:hover {
+            border-color: var(--primary);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* PRODUCTS GRID */
+        .products-container {
+            padding: 0 15px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(249, 115, 22, 0.1);
+        }
+        
+        .favorite-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--card-bg);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .favorite-btn:hover {
+            transform: scale(1.15);
+        }
+        
+        .favorite-btn.active {
+            color: #ef4444;
+        }
+        
+        .product-info {
+            padding: 14px;
+        }
+        
+        .product-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        
+        .product-desc {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            min-height: 32px;
+        }
+        
+        .product-price {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 13px;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        /* ADMIN ADD PRODUCT */
+        .admin-add-section {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .admin-add-section.active {
+            display: block;
+        }
+        
+        .admin-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: var(--dark-bg);
+            color: var(--text);
+        }
+        
+        .admin-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        /* PAGES */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* PROFILE PAGE */
+        .profile-container {
+            padding: 15px;
+        }
+        
+        .profile-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .profile-info {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .profile-label {
+            color: var(--gray);
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-value {
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 22px;
+            color: var(--gray);
+            transition: all 0.3s;
+            font-weight: 600;
+            border-top: 3px solid transparent;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+            border-top-color: var(--primary);
+        }
+        
+        .nav-label {
+            font-size: 10px;
+            display: block;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div class="splash">
+        <div class="splash-content">
+            <div class="splash-text">SHERDOR BURGER</div>
+            <div class="splash-smile">😊</div>
+        </div>
+    </div>
+    
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div class="header-title">🍔 Sherdor</div>
+        </div>
+        <button class="settings-btn" id="settingsBtn">⚙️</button>
+    </div>
+    
+    <!-- SIDEBAR -->
+    <div class="sidebar-overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">🍔 Sherdor</div>
+            <div class="sidebar-location">Mingbuloq, Namangan</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item" data-page="home">📱 Bosh sahifa</li>
+            <li class="sidebar-item" data-page="profile">👤 Profilim</li>
+            <li class="sidebar-item" data-page="favorites">❤️ Sevimlilar</li>
+            <li class="sidebar-item" data-page="orders">📦 Buyurtmalar</li>
+            <li class="sidebar-item" data-page="about">ℹ️ Biz haqimizda</li>
+            <li class="sidebar-item" id="logoutBtn">🚪 Chiqish</li>
+        </ul>
+    </div>
+    
+    <!-- CONTENT -->
+    <div class="content">
+        <!-- AUTH PAGE -->
+        <div class="page active" id="authPage">
+            <div class="auth-container">
+                <div class="auth-title">🔐 Kirish</div>
+                <div class="auth-subtitle">Telefon raqamingizni kiriting</div>
+                
+                <div id="phoneStep">
+                    <input type="text" class="phone-input" id="phoneInput" placeholder="+998 __ ___ __ __" maxlength="13">
+                    <button class="auth-btn" id="sendCodeBtn">Kodni yuborish</button>
+                </div>
+                
+                <div id="methodStep" style="display: none;">
+                    <p style="margin-bottom: 15px; color: var(--gray); font-size: 14px;">Kod qayerdan olmoqchisiz?</p>
+                    <button class="auth-method-btn" id="telegramBtn">📱 Telegram orqali</button>
+                    <button class="auth-method-btn" id="smsBtn">💬 SMS orqali</button>
+                </div>
+                
+                <div id="codeStep" style="display: none;">
+                    <p style="margin-bottom: 15px; color: var(--gray); font-size: 14px;">Kodni kiriting</p>
+                    <input type="text" class="code-input" id="codeInput" placeholder="000000" maxlength="6">
+                    <button class="auth-btn" id="verifyBtn">Tasdiqlash</button>
+                    <button class="auth-btn" style="background: var(--card-bg); border: 1px solid var(--border); color: var(--text);" id="backBtn">Orqaga</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HOME PAGE -->
+        <div class="page" id="homePage">
+            <div class="home-container">
+                <div class="delivery-toggle">
+                    <button class="toggle-btn active" data-delivery="delivery">🚗 Yetkazib berish</button>
+                    <button class="toggle-btn" data-delivery="pickup">🏪 O'zi olib ketish</button>
+                </div>
+                
+                <div class="location-section active" id="locationSection">
+                    <label class="location-label">📍 Manzilingizni kiriting</label>
+                    <input type="text" class="location-input" id="addressInput" placeholder="Uy manzili, ko'cha...">
+                    <div class="location-picker">🗺️ Xaritadan tanlang</div>
+                </div>
+                
+                <div class="pickup-info" id="pickupInfo">
+                    <div class="pickup-title">📍 Sherdor Burger - Olib ketish</div>
+                    <div class="pickup-detail">Namangan Viloyati, Mingbuloq tumani</div>
+                    <div class="pickup-detail">Sherdor savdo markazi</div>
+                    <div class="pickup-detail">⏰ Ish vaqti: 10:00 - 00:00</div>
+                    <div class="pickup-detail">📞 +998 99 123 45 67</div>
+                </div>
+                
+                <div class="admin-add-section" id="adminAddSection">
+                    <div class="admin-title">➕ Yangi taom qo'shish</div>
+                    <input type="text" class="admin-input" id="adminProductName" placeholder="Taom nomi">
+                    <input type="text" class="admin-input" id="adminProductDesc" placeholder="Tavsifi">
+                    <input type="number" class="admin-input" id="adminProductPrice" placeholder="Narxi (so'm)">
+                    <select class="admin-input" id="adminProductCategory">
+                        <option value="shirinlik">Shirinliklar</option>
+                        <option value="ichimlik">Ichimlik</option>
+                        <option value="lavash">Lavash</option>
+                        <option value="xotdog">Xot dog</option>
+                        <option value="burger">Burger</option>
+                        <option value="kefsi">Kefsi</option>
+                    </select>
+                    <input type="text" class="admin-input" id="adminProductEmoji" placeholder="Emoji (masalan: 🍔)" maxlength="2">
+                    <button class="admin-btn" id="addProductBtn">✅ Qo'shish</button>
+                </div>
+            </div>
+            
+            <div class="categories">
+                <button class="category-btn active" data-category="all">Barchasi</button>
+                <button class="category-btn" data-category="shirinlik">Shirinliklar</button>
+                <button class="category-btn" data-category="ichimlik">Ichimlik</button>
+                <button class="category-btn" data-category="lavash">Lavash</button>
+                <button class="category-btn" data-category="xotdog">Xot dog</button>
+                <button class="category-btn" data-category="burger">Burger</button>
+                <button class="category-btn" data-category="kefsi">Kefsi</button>
+            </div>
+            
+            <div class="products-container">
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+        </div>
+        
+        <!-- PROFILE PAGE -->
+        <div class="page" id="profilePage">
+            <div class="profile-container">
+                <h2 style="margin-bottom: 20px; font-size: 22px; font-weight: 800;">👤 Mening profil</h2>
+                <div class="profile-card">
+                    <div class="profile-info">
+                        <div class="profile-label">Telefon raqami</div>
+                        <div class="profile-value" id="profilePhone">+998</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-label">Manzili</div>
+                        <div class="profile-value" id="profileAddress">Kiritilmagan</div>
+                    </div>
+                    <button class="auth-btn" id="editProfileBtn">✏️ O'zgartirish</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FAVORITES PAGE -->
+        <div class="page" id="favoritesPage">
+            <div style="padding: 15px;">
+                <h2 style="margin-bottom: 20px; font-size: 22px; font-weight: 800;">❤️ Sevimli taomlar</h2>
+                <div class="products-grid" id="favoritesGrid"></div>
+                <div id="emptyFav" class="empty-message" style="display: none;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                    <p>Hali sevimli taom yo'q</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ORDERS PAGE -->
+        <div class="page" id="ordersPage">
+            <div style="padding: 15px;">
+                <h2 style="margin-bottom: 20px; font-size: 22px; font-weight: 800;">📦 Buyurtma tarixi</h2>
+                <div id="ordersList" class="empty-message">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                    <p>Hali buyurtma yo'q</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ABOUT PAGE -->
+        <div class="page" id="aboutPage">
+            <div class="profile-container">
+                <h2 style="margin-bottom: 20px; font-size: 22px; font-weight: 800;">ℹ️ Biz haqimizda</h2>
+                <div class="profile-card">
+                    <p style="line-height: 1.8; color: var(--gray); margin-bottom: 15px;">Sherdor Burger - Namangan viloyatining eng mazali va tez buyurtma yetkazib berish xizmati.</p>
+                    <div class="profile-info">
+                        <div class="profile-label">Manzili</div>
+                        <div class="profile-value">Mingbuloq tumani, Sherdor savdo markazi</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-label">Telefon</div>
+                        <div class="profile-value">+998 99 123 45 67</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-label">Ish vaqti</div>
+                        <div class="profile-value">10:00 - 00:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-nav="home">📋<div class="nav-label">Menyu</div></button>
+        <button class="nav-item" data-nav="profile">👤<div class="nav-label">Profil</div></button>
+        <button class="nav-item" data-nav="favorites">❤️<div class="nav-label">Sevimli</div></button>
+        <button class="nav-item" data-nav="orders">🛒<div class="nav-label">Savat</div></button>
+    </div>
+    
+    <script>
+        // DEFAULT PRODUCTS
+        const defaultProducts = [
+            { id: 1, name: 'Shokoladli tort', desc: 'Qalin shokoladli tort', price: 45000, category: 'shirinlik', emoji: '🍰' },
+            { id: 2, name: 'Vanilla keks', desc: 'Shirin yumshoq keks', price: 12000, category: 'shirinlik', emoji: '🧁' },
+            { id: 3, name: 'Cola', desc: 'Gazli ichimlik, sovuq', price: 5000, category: 'ichimlik', emoji: '🥤' },
+            { id: 4, name: 'Apelsin sharbati', desc: 'Mazali sharbat', price: 6000, category: 'ichimlik', emoji: '🧃' },
+            { id: 5, name: 'Koffe', desc: 'Qora koffe, issiq', price: 8000, category: 'ichimlik', emoji: '☕' },
+            { id: 6, name: 'Goshtli lavash', desc: 'Toza go\'sht, piyoz', price: 18000, category: 'lavash', emoji: '🌯' },
+            { id: 7, name: 'Tovuq lavash', desc: 'Mazali tovuq', price: 16000, category: 'lavash', emoji: '🌯' },
+            { id: 8, name: 'Tandir lavash', desc: 'Tandirda pishirilgan', price: 20000, category: 'lavash', emoji: '🔥' },
+            { id: 9, name: 'Klassik xot dog', desc: 'Oddiy xot dog', price: 16000, category: 'xotdog', emoji: '🌭' },
+            { id: 10, name: 'Kanadski xot dog', desc: 'Usta tayyorlangan', price: 22000, category: 'xotdog', emoji: '🌭' },
+            { id: 11, name: 'Klassik burger', desc: 'Oddiy burger, pishloq', price: 20000, category: 'burger', emoji: '🍔' },
+            { id: 12, name: 'Double burger', desc: 'Ikki patty, pishloq', price: 28000, category: 'burger', emoji: '🍔' },
+            { id: 13, name: 'Premium burger', desc: 'Eng yaxshi, bacon', price: 35000, category: 'burger', emoji: '🍔' },
+            { id: 14, name: 'Qora choy', desc: 'Issiq choy', price: 4000, category: 'kefsi', emoji: '🫖' },
+            { id: 15, name: 'Cappuccino', desc: 'Sut bilan koffe', price: 10000, category: 'kefsi', emoji: '☕' },
+        ];
+        
+        // STATE
+        let isLoggedIn = false;
+        let userPhone = null;
+        let adminPhone = '+998901234567'; // Owner phone
+        let isAdmin = false;
+        let products = JSON.parse(localStorage.getItem('products')) || defaultProducts;
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let deliveryType = 'delivery';
+        let authMethod = null;
+        
+        // SIDEBAR
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        });
+        
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+        
+        // SIDEBAR NAVIGATION
+        document.querySelectorAll('[data-page]').forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.dataset.page + 'Page';
+                showPage(pageId);
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+        });
+        
+        // PAGE SHOW
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        // BOTTOM NAV
+        document.querySelectorAll('[data-nav]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-nav]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const pageId = btn.dataset.nav + 'Page';
+                showPage(pageId);
+                if (pageId === 'favoritesPage') renderFavorites();
+            });
+        });
+        
+        // AUTH - SEND CODE
+        document.getElementById('sendCodeBtn').addEventListener('click', () => {
+            const phone = document.getElementById('phoneInput').value.trim();
+            if (!phone || phone.length < 10) {
+                alert('To\'g\'ri telefon raqam kiriting!');
+                return;
+            }
+            userPhone = phone;
+            document.getElementById('phoneStep').style.display = 'none';
+            document.getElementById('methodStep').style.display = 'block';
+        });
+        
+        // AUTH - METHOD SELECTION
+        document.getElementById('telegramBtn').addEventListener('click', () => {
+            authMethod = 'telegram';
+            document.getElementById('methodStep').style.display = 'none';
+            document.getElementById('codeStep').style.display = 'block';
+        });
+        
+        document.getElementById('smsBtn').addEventListener('click', () => {
+            authMethod = 'sms';
+            document.getElementById('methodStep').style.display = 'none';
+            document.getElementById('codeStep').style.display = 'block';
+        });
+        
+        // AUTH - VERIFY CODE
+        document.getElementById('verifyBtn').addEventListener('click', () => {
+            const code = document.getElementById('codeInput').value.trim();
+            if (code.length !== 6) {
+                alert('Kodni to\'g\'ri kiriting!');
+                return;
+            }
+            
+            // Verify
+            isLoggedIn = true;
+            isAdmin = userPhone === adminPhone;
+            
+            document.getElementById('authPage').classList.remove('active');
+            document.getElementById('homePage').classList.add('active');
+            
+            document.getElementById('phoneStep').style.display = 'block';
+            document.getElementById('methodStep').style.display = 'none';
+            document.getElementById('codeStep').style.display = 'none';
+            
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('codeInput').value = '';
+            
+            renderProducts();
+            updateAdminPanel();
+            updateProfilePage();
+        });
+        
+        // AUTH - BACK BUTTON
+        document.getElementById('backBtn').addEventListener('click', () => {
+            document.getElementById('codeStep').style.display = 'none';
+            document.getElementById('methodStep').style.display = 'block';
+        });
+        
+        // LOGOUT
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            isLoggedIn = false;
+            userPhone = null;
+            isAdmin = false;
+            authMethod = null;
+            
+            showPage('auth');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+        
+        // DELIVERY TOGGLE
+        document.querySelectorAll('[data-delivery]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-delivery]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                deliveryType = btn.dataset.delivery;
+                
+                const locSection = document.getElementById('locationSection');
+                const pickupInfo = document.getElementById('pickupInfo');
+                
+                if (deliveryType === 'delivery') {
+                    locSection.classList.add('active');
+                    pickupInfo.classList.remove('active');
+                } else {
+                    locSection.classList.remove('active');
+                    pickupInfo.classList.add('active');
+                }
+            });
+        });
+        
+        // RENDER PRODUCTS
+        function renderProducts(category = 'all') {
+            const grid = document.getElementById('productsGrid');
+            const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+            
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${p.emoji}
+                        <button class="favorite-btn ${favorites.includes(p.id) ? 'active' : ''}" 
+                            onclick="toggleFavorite(${p.id})">
+                            ${favorites.includes(p.id) ? '❤️' : '🤍'}
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-desc">${p.desc}</div>
+                        <div class="product-price">${p.price.toLocaleString()} so'm</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderFavorites() {
+            const grid = document.getElementById('favoritesGrid');
+            const favProducts = products.filter(p => favorites.includes(p.id));
+            
+            if (favProducts.length === 0) {
+                document.getElementById('emptyFav').style.display = 'block';
+                grid.innerHTML = '';
+                return;
+            }
+            
+            document.getElementById('emptyFav').style.display = 'none';
+            grid.innerHTML = favProducts.map(p => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${p.emoji}
+                        <button class="favorite-btn active" onclick="toggleFavorite(${p.id})">❤️</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-desc">${p.desc}</div>
+                        <div class="product-price">${p.price.toLocaleString()} so'm</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(f => f !== id);
+            } else {
+                favorites.push(id);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderProducts();
+        }
+        
+        // CATEGORIES
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProducts(btn.dataset.category);
+            });
+        });
+        
+        // ADMIN PANEL
+        function updateAdminPanel() {
+            const adminSection = document.getElementById('adminAddSection');
+            if (isAdmin) {
+                adminSection.classList.add('active');
+            } else {
+                adminSection.classList.remove('active');
+            }
+        }
+        
+        document.getElementById('addProductBtn').addEventListener('click', () => {
+            const name = document.getElementById('adminProductName').value.trim();
+            const desc = document.getElementById('adminProductDesc').value.trim();
+            const price = parseInt(document.getElementById('adminProductPrice').value);
+            const category = document.getElementById('adminProductCategory').value;
+            const emoji = document.getElementById('adminProductEmoji').value.trim();
+            
+            if (!name || !desc || !price || !emoji) {
+                alert('Barcha maydonni to\'ldiring!');
+                return;
+            }
+            
+            const newProduct = {
+                id: Date.now(),
+                name: name,
+                desc: desc,
+                price: price,
+                category: category,
+                emoji: emoji
+            };
+            
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            document.getElementById('adminProductName').value = '';
+            document.getElementById('adminProductDesc').value = '';
+            document.getElementById('adminProductPrice').value = '';
+            document.getElementById('adminProductEmoji').value = '';
+            
+            renderProducts();
+            alert('✅ Taom qo\'shildi!');
+        });
+        
+        // PROFILE PAGE
+        function updateProfilePage() {
+            document.getElementById('profilePhone').textContent = userPhone || '+998';
+        }
+        
+        // INIT
+        updateAdminPanel();
+        updateProfilePage();
+    </script>
+</body>
+</html>
